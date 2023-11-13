@@ -158,7 +158,7 @@ public class StudentBookInterface {
                         String rid = JOptionPane.showInputDialog(frame,"Enter the ID to remove");
                         int removeId = Integer.parseInt(rid);
 
-                        if(removeId < 0 || removeId > name.size() || valid[removeId - 1] == -1)
+                        if( removeId < 0 || valid[removeId - 1] == -1)
                             JOptionPane.showMessageDialog(frame,"Invalid Record ID","Invalid",JOptionPane.ERROR_MESSAGE);
                         
                         else
@@ -191,7 +191,7 @@ public class StudentBookInterface {
                     String sID = JOptionPane.showInputDialog(frame, "Enter the ID to search");
                     int searchID = Integer.parseInt(sID);
 
-                    if (searchID < 1 || searchID > name.size() || valid[searchID - 1] == -1)
+                    if (searchID < 0 ||  valid[searchID - 1] == -1)
                         JOptionPane.showMessageDialog(frame, "Invalid Record ID", "Invalid Records",
                                 JOptionPane.ERROR_MESSAGE);
 
@@ -222,7 +222,7 @@ public class StudentBookInterface {
                     String editid = JOptionPane.showInputDialog(frame, "Enter the ID to edit");
                     int editID = Integer.parseInt(editid);
 
-                    if (editID < 1 || editID > name.size() || valid[editID - 1] == -1)
+                    if (editID < 0 || valid[editID - 1] == -1)
                         JOptionPane.showMessageDialog(frame, "Invalid Record ID", "Invalid Records",
                                 JOptionPane.ERROR_MESSAGE);
 
