@@ -1,0 +1,339 @@
+TASK 3
+1. Create a Student class to represent individual students. Include attributes such as name, rollnumber, grade, and any other relevant details.
+2. Implement a StudentManagementSystem class to manage the collection of students. Include methods to add a student, remove a student, search for a student, and display all students.
+3. Design the user interface for the Student Management System. This can be a console-based interface or a graphical user interface (GUI) using libraries like Swing or JavaFX.
+4. Implement methods to read and write student data to a storage medium, such as a file or a database.
+5. Allow users to interact with the Student Management System by providing options such as adding a new student, editing an existing student's information, searching for a student, displaying all students, and exiting the application.
+6. Implement input validation to ensure that required fields are not left empty and that the student data is in the correct format
+
+Source Code :
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+public class StudentBookInterface {
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList<String> name = new ArrayList<>();
+    static ArrayList<Integer> rno = new ArrayList<>();
+    static ArrayList<Integer> std = new ArrayList<>();
+    static ArrayList<Integer> grade = new ArrayList<>();
+    static int ID = 0;
+    static int valid[] = new int[100];
+
+    static JTextArea choice;
+
+    static JRadioButton include;
+    static JRadioButton remove;
+    static JRadioButton search;
+    static JRadioButton edit;
+    static JRadioButton display;
+    static JRadioButton exit;
+
+    static ButtonGroup btn = new ButtonGroup();
+
+    public static void main(String args[]) {
+        // Main Frame
+
+        JFrame frame = new JFrame("Student Book System");
+        choice = new JTextArea(20, 20);
+        frame.add(choice);
+        frame.setVisible(true);
+        frame.setLayout(new FlowLayout(FlowLayout.LEFT, 170, 20));
+
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = kit.getScreenSize();
+        int screenHeight = screenSize.height;
+        int screenWidth = screenSize.width;
+
+        // Layout
+
+        frame.setSize(screenWidth / 3, screenHeight / 2);
+        frame.setResizable(false);
+        frame.setLocation(500, 250);
+
+        choice.setEditable(false);
+        choice.setFont(new Font("SansSerif", Font.BOLD, 15));
+        choice.setColumns(0);
+        choice.setRows(0);
+
+        Font font = new Font("Monospaced", Font.BOLD, 20);
+        choice.setFont(font);
+        choice.append("Student Book System");
+
+        // Main Frame Options
+
+        include = new JRadioButton("1.Add records of the student\n");
+        remove = new JRadioButton("2.Remove the records of the student\n");
+        search = new JRadioButton("3.Search for a student record\n");
+        edit = new JRadioButton("4.Edit a student record\n");
+        display = new JRadioButton("5.Display all records\n");
+        exit = new JRadioButton("6.Exit\n");
+
+        btn.add(include);
+        btn.add(remove);
+        btn.add(search);
+        btn.add(edit);
+        btn.add(display);
+        btn.add(exit);
+
+        frame.add(include);
+        frame.add(remove);
+        frame.add(search);
+        frame.add(edit);
+        frame.add(display);
+        frame.add(exit);
+
+        // Action Listener for each option
+
+        // Add Records
+
+        include.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame addStudentFrame = new JFrame("Add records of the student");
+                addStudentFrame.setLayout(new GridLayout(5, 2));
+
+                JTextField nameField = new JTextField();
+                JTextField rnoField = new JTextField();
+                JTextField classField = new JTextField();
+                JTextField gradeField = new JTextField();
+
+                addStudentFrame.add(new JLabel("Name"));
+                addStudentFrame.add(nameField);
+                addStudentFrame.add(new JLabel("Roll Number"));
+                addStudentFrame.add(rnoField);
+                addStudentFrame.add(new JLabel("Class"));
+                addStudentFrame.add(classField);
+                addStudentFrame.add(new JLabel("Grade"));
+                addStudentFrame.add(gradeField);
+
+                JButton addRecords = new JButton("Save the records");
+
+                addRecords.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String studentName = nameField.getText();
+                        int studentRno = Integer.parseInt(rnoField.getText());
+                        int studentClass = Integer.parseInt(classField.getText());
+                        int studentGrade = Integer.parseInt(gradeField.getText());
+
+                        name.add(studentName);
+                        rno.add(studentRno);
+                        std.add(studentClass);
+                        grade.add(studentGrade);
+
+                        JOptionPane.showMessageDialog(frame,
+                                "Student Record has been added!\nThe ID for the student is " + (ID + 1));
+
+                        valid[ID] = 1;
+                        ID += 1;
+
+                        addStudentFrame.dispose();
+                    }
+                });
+
+                addStudentFrame.add(addRecords);
+                addStudentFrame.setSize(300, 150);
+                addStudentFrame.setLocationRelativeTo(null);
+                addStudentFrame.setResizable(false);
+                addStudentFrame.setVisible(true);
+            }
+        });
+
+        // remove records
+
+        remove.addActionListener(new ActionListener() {
+            @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    if(name.size() == 0)
+                        JOptionPane.showMessageDialog(frame,"No records to remove", "Null Records",JOptionPane.ERROR_MESSAGE);
+                    
+                    else
+                    {
+                        String rid = JOptionPane.showInputDialog(frame,"Enter the ID to remove");
+                        int removeId = Integer.parseInt(rid);
+
+                        if(removeId < 0 || removeId > name.size() || valid[removeId - 1] == -1)
+                            JOptionPane.showMessageDialog(frame,"Invalid Record ID","Invalid",JOptionPane.ERROR_MESSAGE);
+                        
+                        else
+                        {
+                            name.remove(removeId - 1);
+                            rno.remove(removeId - 1);
+                            std.remove(removeId - 1);
+                            grade.remove(removeId - 1);
+                            valid[removeId - 1] = -1;
+
+                            JOptionPane.showMessageDialog(frame,"Record removed successfully!");
+                        }
+                    }
+                    
+                }
+            
+        });
+         
+        
+        // search records
+
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (name.size() == 0)
+                    JOptionPane.showMessageDialog(frame, "No records to search", "Null Records",
+                            JOptionPane.ERROR_MESSAGE);
+                else {
+
+                    String sID = JOptionPane.showInputDialog(frame, "Enter the ID to search");
+                    int searchID = Integer.parseInt(sID);
+
+                    if (searchID < 1 || searchID > name.size() || valid[searchID - 1] == -1)
+                        JOptionPane.showMessageDialog(frame, "Invalid Record ID", "Invalid Records",
+                                JOptionPane.ERROR_MESSAGE);
+
+                    else {
+
+                        String recordText = String.format("Name: %s\nRoll Number: %d\nClass: %d\nGrade: %d",
+                                name.get(searchID - 1), rno.get(searchID - 1), std.get(searchID - 1),
+                                grade.get(searchID - 1));
+
+                        JOptionPane.showMessageDialog(frame, recordText, "Student Record",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
+            }
+
+        });
+
+        // edit records
+
+        edit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (name.size() == 0)
+                    JOptionPane.showMessageDialog(frame, "No records to edit", "Null Records",
+                            JOptionPane.ERROR_MESSAGE);
+                else {
+                    String editid = JOptionPane.showInputDialog(frame, "Enter the ID to edit");
+                    int editID = Integer.parseInt(editid);
+
+                    if (editID < 1 || editID > name.size() || valid[editID - 1] == -1)
+                        JOptionPane.showMessageDialog(frame, "Invalid Record ID", "Invalid Records",
+                                JOptionPane.ERROR_MESSAGE);
+
+                    else {
+                        JFrame editFrame = new JFrame("Edit Records");
+                        editFrame.setLayout(new GridLayout(5, 1));
+
+                        JRadioButton editName = new JRadioButton("Edit Name");
+                        JRadioButton editRno = new JRadioButton("Edit Roll No");
+                        JRadioButton editClass = new JRadioButton("Edit Class");
+                        JRadioButton editGrade = new JRadioButton("Edit Grade");
+
+                        ButtonGroup editBtn = new ButtonGroup();
+
+                        editBtn.add(editName);
+                        editBtn.add(editRno);
+                        editBtn.add(editClass);
+                        editBtn.add(editGrade);
+
+                        editName.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String newName = JOptionPane.showInputDialog(frame, "Enter the new name");
+                                name.set(editID - 1, newName);
+                                JOptionPane.showMessageDialog(frame,"Edited Successfully");
+                            }
+                        });
+
+                        editRno.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String eRno = JOptionPane.showInputDialog(frame, "Enter the new Roll No");
+                                int newRno = Integer.parseInt(eRno);
+                                rno.set(editID - 1, newRno);
+                                JOptionPane.showMessageDialog(frame,"Edited Successfully");
+                            }
+                        });
+
+                        editClass.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String eClass = JOptionPane.showInputDialog(frame, "Enter the new Class");
+                                int newClass = Integer.parseInt(eClass);
+                                std.set(editID - 1, newClass);
+                                JOptionPane.showMessageDialog(frame,"Edited Successfully");
+                            }
+                        });
+
+                        editGrade.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String eGrade = JOptionPane.showInputDialog(frame, "Enter the new Grade");
+                                int newGrade = Integer.parseInt(eGrade);
+                                grade.set(editID - 1, newGrade);
+                                JOptionPane.showMessageDialog(frame,"Edited Successfully");
+                            }
+                        });
+
+                        editFrame.add(editName);
+                        editFrame.add(editRno);
+                        editFrame.add(editClass);
+                        editFrame.add(editGrade);
+
+                        editFrame.setSize(300, 150);
+                        editFrame.setLocationRelativeTo(null);
+                        editFrame.setResizable(false);
+                        editFrame.setVisible(true);
+
+                    }
+
+                }
+
+            }
+        });
+
+        // Display records
+
+        display.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (name.size() == 0)
+                    JOptionPane.showMessageDialog(frame, "No records to display", "Null Records",
+                            JOptionPane.ERROR_MESSAGE);
+
+                else {
+                    JTable table = new JTable();
+                    DefaultTableModel model = new DefaultTableModel();
+
+                    table.setModel(model);
+                    model.addColumn("Name");
+                    model.addColumn("Roll Number");
+                    model.addColumn("Class");
+                    model.addColumn("Grade");
+
+                    for (int i = 0; i < name.size(); i++)
+                        model.addRow(new Object[] { name.get(i), rno.get(i), std.get(i), grade.get(i) });
+
+                    JScrollPane scrollPane = new JScrollPane(table);
+
+                    JOptionPane.showMessageDialog(frame, scrollPane, "All Student Records",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+    
+        //exit
+
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                JOptionPane.showMessageDialog(frame,"Exiting Student Record System!");
+                System.exit(0);
+            }
+        });
+    }
+
+}
