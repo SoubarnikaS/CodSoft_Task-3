@@ -1,0 +1,248 @@
+TASK 3
+1. Create a Student class to represent individual students. Include attributes such as name, rollnumber, grade, and any other relevant details.
+2. Implement a StudentManagementSystem class to manage the collection of students. Include methods to add a student, remove a student, search for a student, and display all students.
+3. Design the user interface for the Student Management System. This can be a console-based interface or a graphical user interface (GUI) using libraries like Swing or JavaFX.
+4. Implement methods to read and write student data to a storage medium, such as a file or a database.
+5. Allow users to interact with the Student Management System by providing options such as adding a new student, editing an existing student's information, searching for a student, displaying all students, and exiting the application.
+6. Implement input validation to ensure that required fields are not left empty and that the student data is in the correct format
+
+Source Code :
+
+import java.util.*;
+import java.util.regex.Pattern;
+
+public class StudentBook 
+{
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList<String> name = new ArrayList<>();
+    static ArrayList<Integer> rno = new ArrayList<>();
+    static ArrayList<String> std = new ArrayList<>();
+    static ArrayList<Integer> grade = new ArrayList<>();
+    static int valid[] = new int[100];
+    static int numOfRecords = 0;
+    static int totalRecords = 0;
+    static int ID = 0;
+
+    public static void addStudent() 
+    {
+        System.out.print("Enter the number of records you want to add: ");
+        numOfRecords = sc.nextInt();
+        totalRecords += numOfRecords;
+        sc.nextLine();
+
+        while(numOfRecords != 0)
+        {
+            --numOfRecords;
+            System.out.println();
+            try 
+            {
+                System.out.print("Enter the name : ");
+                String cname = sc.nextLine();
+                
+                while (!Pattern.matches("^[a-zA-Z]+$", cname)) 
+                {
+                    System.out.println("`````Name should contain only characters!`````");
+                    System.out.print("Enter the name containing only alphabets : ");
+                    cname = sc.nextLine();
+                    System.out.println();
+                }
+                name.add(cname);
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("An error occurred: " + e.getMessage());
+            }
+            System.out.print("Enter the register number of the student: ");
+            int r = sc.nextInt();
+            sc.nextLine();
+            System.out.print("Enter the class of the student: ");
+            String c = sc.nextLine();
+            System.out.print("Enter the grade of the student: ");
+            int g = sc.nextInt();
+            sc.nextLine();
+            rno.add(r);
+            std.add(c);
+            grade.add(g);
+            System.out.println("``````The ID for the student is: " + (ID + 1)+"`````");
+            ID = ID + 1;
+        }
+        
+    }
+
+    public static void removeStudent() 
+    {
+        if (totalRecords == 0) 
+            System.out.println("``````No records are available to delete`````");
+        else 
+        {
+            System.out.print("Enter the ID you want to remove: ");
+            int remove = sc.nextInt();
+
+            if (remove >= 1 && remove <= totalRecords) 
+            {
+                name.remove(remove - 1);
+                rno.remove(remove - 1);
+                std.remove(remove - 1);
+                grade.remove(remove - 1);
+                valid[remove - 1] = -1;
+                totalRecords--;
+                System.out.println("``````Record Removed!`````");
+            } 
+
+            else 
+                System.out.println("``````Invalid student ID.``````");
+        }
+    }
+
+    public static void searchStudent() {
+        if (totalRecords == 0) 
+            System.out.println("`````No records to search!``````");
+        else 
+        {
+            System.out.print("Enter the student ID you want to search: ");
+            int search = sc.nextInt();
+
+            if(valid[search - 1] == -1)
+                System.out.println("`````Invalid record ID!`````");
+
+            else if (search >= 1 && search <= totalRecords) 
+            {
+                System.out.println("Name\tRoll No\tClass\tGrade");
+                System.out.println(name.get(search - 1) + "\t" + rno.get(search - 1) + "\t" + std.get(search - 1) + "\t" + grade.get(search - 1));
+            } 
+
+            else 
+                System.out.println("``````Invalid student ID.``````");
+        
+        }
+    }
+
+    public static void editStudent() 
+    {
+        if (totalRecords == 0)
+            System.out.println("`````No records to edit!`````");
+
+        else 
+        {
+            System.out.print("Enter the ID of the student to edit: ");
+            int edit = sc.nextInt();
+            sc.nextLine();
+
+            if(valid[edit - 1] == -1)
+                System.out.println("`````Invalid record ID!``````");
+
+            else if (edit >= 1 && edit <= totalRecords) 
+            {
+                
+                while(true)
+                {
+                    System.out.println("1. Name");
+                    System.out.println("2. Roll No");
+                    System.out.println("3. Class");
+                    System.out.println("4. Grade");
+                    System.out.println("5. Exit");
+                    System.out.println();
+                    System.out.print("Enter the choice you want to edit: ");
+                    int editChoice = sc.nextInt();
+                    sc.nextLine();
+                    switch (editChoice) 
+                    {
+                        case 1:
+                            System.out.print("Enter the new name: ");
+                            String newName = sc.nextLine();
+                            name.set(edit - 1, newName);
+                            System.out.println("`````Updated!`````");
+                            break;
+                        case 2:
+                            System.out.print("Enter the new Roll No: ");
+                            int newRno = sc.nextInt();
+                            rno.set(edit - 1, newRno);
+                            System.out.println("`````Updated!`````");
+                            break;
+                        case 3:
+                            System.out.print("Enter the new class: ");
+                            String newClass = sc.nextLine();
+                            std.set(edit - 1, newClass);
+                            System.out.println("`````Updated!`````");
+                            break;
+                        case 4:
+                            System.out.print("Enter the new grade: ");
+                            int newGrade = sc.nextInt();
+                            grade.set(edit - 1, newGrade);
+                            System.out.println("`````Updated!`````");
+                            break;
+                        case 5:
+                            return;
+                            // break;
+                        default:
+                            System.out.println("``````Enter a valid choice!`````");
+                    }
+                }
+            } 
+            else 
+                System.out.println("`````Invalid student ID.``````");
+        }
+    }
+
+    public static void displayStudent() 
+    {
+        if (totalRecords == 0) 
+            System.out.println("`````No records to display!`````");
+            
+        else
+        {
+            System.out.println();
+            System.out.println("Name\tRoll No\tClass\tGrade");
+            for (int i = 0; i < totalRecords; i++) 
+                System.out.println(name.get(i) + "\t" + rno.get(i) + "\t" + std.get(i) + "\t" + grade.get(i));
+            
+        }
+    }
+
+    public static void main(String[] args) 
+    {
+        System.out.println("**************************************");
+        System.out.println("``          Student Book            ``");
+        System.out.println("**************************************");
+        System.out.println();
+
+        while (true) 
+        {
+            System.out.println();
+            System.out.println("1. Add records of the student");
+            System.out.println("2. Remove a student record");
+            System.out.println("3. Search for a student record");
+            System.out.println("4. Edit a student record");
+            System.out.println("5. Display all records");
+            System.out.println("6. Exit");
+            System.out.println();
+
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice)
+            {
+                case 1:
+                    addStudent();
+                    break;
+                case 2:
+                    removeStudent();
+                    break;
+                case 3:
+                    searchStudent();
+                    break;
+                case 4:
+                    editStudent();
+                    break;
+                case 5:
+                    displayStudent();
+                    break;
+                case 6:
+                    System.exit(0);
+                default:
+                    System.out.println("Enter a valid choice.");
+            }
+        }
+    }
+}
